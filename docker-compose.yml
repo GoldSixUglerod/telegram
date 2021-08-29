@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  bot:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes:
+      - model:/bot/model
+    environment:
+        - BOT_TOKEN
+        - DB_URL=sqlite://db.sqlite3
+    command: apt install ffmpeg
+    command: python /bot/app.py
+
+#      context: .
+#      dockerfile: ./Dockerfile
+#    command: python /effectlybot/create_db.

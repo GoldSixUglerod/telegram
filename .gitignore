@@ -1,0 +1,10 @@
+.idea/
+povar/
+__pycache__/
+venv/
+effectlybot/voices/
+effectlybot/db.*
+*.wav
+*.env
+*.ogg
+model
