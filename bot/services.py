@@ -1,5 +1,6 @@
 import json
 import subprocess
+from json import JSONDecodeError
 
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import os
@@ -72,11 +73,22 @@ def send_request(text):
     api_host = "http://10.91.54.226:8000"
     endpoint = "/api/task/"
     res = requests.post(api_host + endpoint, data={"description": text})
-    data = res.json()
-    if not 'description' in data.keys():
+    try:
+        data = res.json()
+    except JSONDecodeError:
+        return "Внутренняя ошибка 😢 в сообщении от сервера"
+    if not 'description' in data.keys() and not 'user_id' in data.keys():
         print("че происходит. пришел стремный ответ от сервера")
         print(data)
+        return "Внутренняя ошибка 😢"
     if data['description'].startswith("Choosing department model cannot confidently define department to choose for"):
         return "Не смогли найти подходящий департамент. Мы перенаправили запрос человеку на рассмотрение"
-    # TODO add person that yes
-
+    enpdpoint = f"/api/user/{data['user_id']}/"
+    res_new = requests.get(api_host + enpdpoint)
+    try:
+        data_new = res_new.json()
+    except JSONDecodeError:
+        return "Внутренняя ошибка 😢 в сообщении от сервера"
+    print(data_new)
+    return f"Задача назначилась на сотрудника #{data_new['pk']}.\nИмя: {data_new['user']['first_name']} {data_new['user']['last_name']}\n" \
+           f"Из департамента: {data_new['department']['name']}"

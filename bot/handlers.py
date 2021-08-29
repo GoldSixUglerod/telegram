@@ -10,9 +10,6 @@ someone_process_audio = False
 @dp.message_handler(state="*", commands=["start"])
 async def bot_start(message: types.Message, state: FSMContext):
     await state.finish()
-    # text = get_text('/home/mark/PycharmProjects/atom/telegram_bot/voices/message.wav')
-    # print(text)
-    a = send_request("пожар пожарная горение огонь пожарный жарко")
     await message.answer("Привет!\nЯ помогу тебе быстро разобраться с твоей проблемой. Опиши мне ее или отправь "
                          "голосовое сообщение")
 
